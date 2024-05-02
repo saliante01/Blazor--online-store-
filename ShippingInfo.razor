@@ -1,0 +1,49 @@
+﻿@using OnlineStore_Blazor.Models
+@using OnlineStore_Blazor.Services
+@using Microsoft.AspNetCore.Components
+@inject NavigationManager NavigationManager
+
+@page "/shipping-info"
+@inject ShippingInfoService ShippingInfoService
+
+<h1>Datos de Envío</h1>
+
+<EditForm Model="shippingData" OnValidSubmit="HandleSubmit">
+    <div class="form-group">
+        <label for="name">Nombre:</label>
+        <InputText id="name" class="form-control" @bind-Value="shippingData.Name" />
+    </div>
+
+    <div class="form-group">
+        <label for="email">Email:</label>
+        <InputText id="email" class="form-control" @bind-Value="shippingData.Email" />
+    </div>
+
+    <div class="form-group">
+        <label for="address">Dirección:</label>
+        <InputText id="address" class="form-control" @bind-Value="shippingData.Address" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Enviar</button>
+</EditForm>
+
+@code {
+    private ShippingData shippingData = new ShippingData();
+
+    protected override void OnInitialized()
+    {
+        if (ShippingInfoService.HasShippingInfo())
+        {
+            // Redirige a la página de datos o muestra un mensaje
+            NavigationManager.NavigateTo("/shipping-data");
+        }
+    }
+
+    private void HandleSubmit()
+    {
+        ShippingInfoService.SaveShippingInfo(shippingData);
+        // Redirige después de guardar la información
+        NavigationManager.NavigateTo("/shipping-data");
+    }
+}
+

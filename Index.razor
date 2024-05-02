@@ -1,0 +1,42 @@
+﻿@using OnlineStore_Blazor.Models
+@using OnlineStore_Blazor.Services
+
+@page "/products"
+@inject ProductService ProductService
+@inject ShoppingCart ShoppingCart
+
+<h1>Productos</h1>
+
+@if (products == null)
+{
+    <p><em>Cargando...</em></p>
+}
+else
+{
+    foreach (var product in products)
+    {
+        <div class="product-card">
+            <h2>@product.Title</h2>
+            <img class="product-image" src="@product.Image" alt="@product.Title">
+            <p>@product.Description</p>
+            <p class="product-price">Precio: @product.Price.ToString("c")</p>
+
+            <!-- Botón de compra utilizando Blazor -->
+            <button @onclick="() => AddToCart(product)" class="btn btn-primary">Agregar al carrito</button>
+        </div>
+    }
+}
+
+@code {
+    private List<Product> products;
+
+    protected override async Task OnInitializedAsync()
+    {
+        products = await ProductService.GetProductsAsync();
+    }
+
+    private void AddToCart(Product product)
+    {
+        ShoppingCart.AddItem(product);
+    }
+}

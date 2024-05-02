@@ -1,0 +1,25 @@
+﻿@using OnlineStore_Blazor.Models
+
+@page "/cart"
+@inject ShoppingCart ShoppingCart
+
+<h1>Carrito de Compras</h1>
+
+@if (ShoppingCart.Items.Count == 0)
+{
+    <p>El carrito está vacío.</p>
+}
+else
+{
+    <ul>
+        @foreach (var item in ShoppingCart.Items)
+        {
+            <li>
+                <h3>@item.Title</h3>
+                <p>Precio: @item.Price.ToString("c")</p>
+            </li>
+        }
+    </ul>
+
+    <h3>Total: @ShoppingCart.GetTotalPrice().ToString("c")</h3>
+}

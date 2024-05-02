@@ -1,0 +1,69 @@
+﻿@using OnlineStore_Blazor.Models
+@using OnlineStore_Blazor.Services
+
+@page "/shipping-data"
+@inject ShippingInfoService ShippingInfoService
+@inject ShoppingCart ShoppingCart
+
+<h1>Datos de Envío Almacenados</h1>
+
+@if (shippingData.Count == 0)
+{
+    <p>No hay datos de envío almacenados.</p>
+}
+else
+{
+    <ul>
+        @foreach (var info in shippingData)
+        {
+            <li>
+                <p><strong>Nombre:</strong> @info.Name</p>
+                <p><strong>Email:</strong> @info.Email</p>
+                <p><strong>Dirección:</strong> @info.Address</p>
+                <hr />
+            </li>
+        }
+    </ul>
+}
+
+<h1>Carrito de Compras</h1>
+
+@if (ShoppingCart.Items.Count == 0)
+{
+    <p>El carrito está vacío.</p>
+}
+else
+{
+    <ul>
+        @foreach (var item in ShoppingCart.Items)
+        {
+            <li>
+                <p><strong>Producto:</strong> @item.Title</p>
+                <p><strong>Precio:</strong> @item.Price.ToString("c")</p>
+                <button @onclick="() => RemoveFromCart(item)" class="btn btn-danger">Eliminar</button>
+                <hr />
+            </li>
+        }
+    </ul>
+
+    <h3>Total: @ShoppingCart.GetTotalPrice().ToString("c")</h3>
+}
+
+@code {
+    private List<ShippingData> shippingData = new List<ShippingData>();
+
+    protected override void OnInitialized()
+    {
+        CargarDatos();
+    }
+
+    private void CargarDatos()
+    {
+        shippingData = ShippingInfoService.GetAllShippingData();
+    }
+
+    private void RemoveFromCart(Product product)
+    {
+        ShoppingCart.RemoveItem(product);
+    }
+}
